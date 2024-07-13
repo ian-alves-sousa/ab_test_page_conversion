@@ -1,12 +1,14 @@
-# Price Elasticity applied to Best Buy E-commerce
+# Teste A/B - Conversão da Página
 
 <div align="center">
-<img src="img/best_buy.jpg" />
+<img src="img/teste-ab.png" />
 </div>
 
 # Introdução
 
-Esse é um projeto end-to-end de Data Science com modelo de regressão linear aplicada com o intuito de encontrar a elasticidade de preço dos produtos. No qual identificamos a elasticidade de todos os produtos e como a mudança de preços de um produto afetam na categoria. Os resultados podem ser acessadas pelo usuário por meio de um web app [(link)](https://elasticidade-de-preco.streamlit.app), aplicando o desconto no produto e visualizando como isso afeta no faturamento anual da categoria.
+Esse é um projeto end-to-end de Data Sciente, focado na especiação com Teste A/B. No qual identificamos qual página nos trouxe a maior conversão em vendas, e mostramos a importância de aplicar esse tipo de teste e como isso pode ser mostrado em valor monetário.
+
+O conjunto de dados pode ser encontrado através desse link: [Repositório do Kagle](https://www.kaggle.com/datasets/zhangluyuan/ab-testing?select=ab_data.csv)
 
 Esse projeto faz parte da "Comunidade DS", que é um ambiente de estudo que promove o aprendizado, execução, e discussão de projetos de Data Science.
 
@@ -19,42 +21,48 @@ Esse projeto foi desenvolvido seguindo o método CRISP-DS(Cross-Industry Standar
 - Limpeza de Dados
 - Análise Exploratória dos Dados
 - Preparação dos Dados
-- Modelos de Machine Learning (Cross-Validation e Fine-Tuning não foram utilizados nesse projeto).
+- Modelos de Machine Learning.
 - Avaliação dos Resultados do Modelo e Tradução para Negócio.
 - Modelo em Produção
 
 ![crisp!](img/crisp.png)
+
+Observação: Como esse não é um projeto com uso de Machine Learning, os ciclos do CRISP-DM foram usados no contexto do Teste A/B.
 
 ### Planejamento
 
 - [1. Descrição e Problema de Negócio](#1-descrição-e-problema-de-negócio)
 - [2. Base de Dados e Premissas de Negócio](#2-base-de-dados-e-premissas-de-negócio)
 - [3. Estratégia de Solução](#3-estratégia-de-solução)
-- [4. Exploration Data Analysis](#4-exploration-data-analysis)
-- [5. Performance da Elasticidade por Produto](#5-performance-da-elasticidade-por-produto)
+- [4. Definição dos Parâmetros](#4-definição-dos-parâmetros)
+- [5. Teste de Hipóteses](#5-teste-de-hipóteses)
 - [6. Resultados de Negócio](#6-resultados-de-negócio)
-- [7. Elasticidade de Preços Cruzada](#7-elasticidade-de-preços-cruzada)
-- [8. Modelo em Produção](#8-modelo-em-produção)
-- [9. Conclusão](#9-conclusão)
-- [10. Aprendizados e Trabalhos Futuros](#10-aprendizados-e-trabalhos-futuros)
+- [7. Conclusão](#7-conclusão)
+- [8. Aprendizados e Trabalhos Futuros](#8-aprendizados-e-trabalhos-futuros)
 
 # 1. Descrição e Problema de Negócio
 
 ### 1.1 Descrição
 
-A elasticidade de preço é uma medida que indica a sensibilidade da demanda de um produto em relação às mudanças no seu preço. Ela é calculada dividindo-se a variação percentual na quantidade demandada pelo produto pela variação percentual no preço do produto.
+A Electronic House é um comercio online ( e-commerce ) de produtos de informática para casas e escritórios. Os clientes podem comprar mouses, monitores, teclados, computadores, laptops, cabos HDMI, fones de ouvido, cameras webcam, entre outros, através de um site online e recebem os produtos no conforto de suas casas.
 
-O conceito de elasticidade de preços visa medir se, por exemplo, o aumento de preços impacta significativamente ou não na demanda do produto. Esse impacto sobre a demanda pode ser classificado como elasticidade de preços elástica, inelástica e unitária. Ainda é possível termos valores negativos representando a elasticidade de preços.
+O time de UX designers vem trabalhando em uma nova página de vendas, com o objetivo de aumentar a taxa de conversão de um produto da loja, um teclado bluetooth. O product manager (gerente de produto) disse que a taxa de conversão da página atual é de 13% em média, no último ano.
+
+O objetivo do product manager é aumentar a taxa de conversão em 2%, ou seja, a nova página de vendas, desenvolvida pelo time de UX, seria um sucesso se a sua taxa de conversão fosse de 15%.
+
+O teclado bluetooth possui um preço de venda de R$ 4.500,00 à vista ou parcelado em 12% sem juros no cartão de crédito.
+
+Antes de trocar a página de vendas antiga pela nova, o product manager gostaria de testar a efetividade da nova página em um grupo menor de clientes, a fim de correr menos riscos de queda da conversão, caso a página nova mostre uma conversão pior do que a página atual.
 
 ### 1.2 Problema de Negócio
 
-Foi recebido um dataset com dados de vendas de diversos E-commerce, o papel do Cientista de Dados foi:
+O papel do Cientista de Dados foi para ajudar o time de Designers da nova página, a validar a sua efetividade de uma maneira mais segura, com mais confiança e rigidez na análise. E os entregáveis são:
 
-**- Descobrir qual E-commerce apresenta mais venda e quais categorias se descatam.**
+**- A conversão da nova página é realmente melhor do a conversão da página atual?**
 
-**- Encontrar quais produtos podemos afirmar que há elasticidade de preços.**
+**- Qual o potencial de número de vendas que a nova página pode trazer?**
 
-**- Encontrar o faturamento anual da categoria após a aplicação da mudança no preço de um produto.**
+**- Qual o faturamento total na venda do teclado bluetooth através da nova página?**
 
 # 2. Base de Dados e Premissas de Negócio
 
@@ -63,130 +71,86 @@ Foi recebido um dataset com dados de vendas de diversos E-commerce, o papel do C
 O conjunto de dados total possui os seguintes atributos:
 | **Atributos** | **Descrição** |
 | ------------------- | ------------------- |
-| Date_imp_d | Data que a compra foi realizada |
-| Category_name | Nome da Categoria |
-| name | Nome do produto |
-| price | Preço do Produto |
-| disc_price | Preço do produto após o desconto aplicado na venda |
-| merchant | Identificador do E-commerce |
-| Disc_percentage | Percentual de desconto |
-| isSale | Indicador se foi venda ou não |
-| Imp_count | Contagem de vendas no período |
-| brand | Marca |
-| p_description | Descrição do produto |
-| dateAdded | Data que o produto foi adicionado ao estoque |
-| dateSeen | Data que o produto saiu do estoque |
-| dateUpdated | Data de atualização da transação |
-| manufacturer | Criador do produto |
-| Day_n | Dia da semana por escrito |
-| month | Mês em número |
-| month_n | Mês em escrito |
-| day | Dia em número |
-| Week_Number | Número da semana |
+| user_id | Identificador do Usuário |
+| timestamp | Data e Hora que o usuário acessou a página |
+| group | Identificar o grupo - Controle ou tratamento |
+| landing_page | Identificador da página - Nova ou antiga |
+| converted | Flag de Conversão |
 
 ## 2.2 Premissas de Negócio
 
 Para realizar esse projeto as seguintes premissas de negócio foram adotadas:
 
-- Cada linha é um produto vendido.
-- Para garantir uma significância estatística o p valor precisa ser menor que 0,05.
-- Produtos que não apresentam significância estatística não terão sua elasticidade de preços considerada nos cálculos do faturamento anual da categoria.
-- Para que a reta da regressão linear seja considerada com bom ajuste aos dados ela precisa ter um valor maior que 0,5.
+- É preciso garantir que o gruopo controle recebeu a página antiga e o grupo de tratamento recebeu a página nova.
+- Há uma quantidade grande na população dos dados, para o teste iremos tirar uma amostra de acordo com os parâmetros definidos.
+- As hipóteses serão:<br>
+**H0 - A conversão da nova página é de 13% (Hipótese Nula)**<br>
+**H1 - A conversão da nova página é diferente de 13%**
 
 # 3. Estratégia de Solução
 
 A estratégia de solução foi a seguinte:
 
-### Passo 01. Descrição dos Dados
+### Passo 01. Análise descritiva dos dados
 
 Nesse passo foi verificado alguns aspectos do conjunto de dados, como: nome de colunas, dimensões, tipos de dados, checagem e preenchimento de dados faltantes (NA), análise descritiva dos dados e quais suas variáveis categóricas.
 
-### Passo 02. Análise Exploratória dos Dados (EDA)
+Além disso, testes de duplicidade das amostras foram feitos, e os usuários que estavam em mais de um grupo foram retirados, devido a quantidade de dados que temos inicialmente.
 
-Exploração dos Dados com objetivo de encontrar Insights para o melhor entendimento do Negócio.
-Foram feitas também análises visando entender mais sobre o dataset e com isso realizar a escolhe de qual E-commerce e categoria de produtos seria utilizado no estudo.
+### Passo 02. Design do Experimento
 
-### Passo 03. Featuring Engineering
+Nesse momento as hipóteses foram formadas, os parâmetros foram definidos em com isso o tamanho da amostra foi encontrado.
 
-Na featuring engineering os datasets com os preços e as semanas dos produtos por semana foi pivotado, preparando-os para os cálculos.
+### Passo 03. Amostragem
 
-### Passo 04. Substituindos NAs dos Datasets Pivotados
+Com o tamanho da amostra definido, foi possível selecionar as amostras de ambos os grupos de forma aleatória e preparar os dados para o teste.
 
-Nas semanas que não apresentaram vendas dos produtos no dataset de preços o NA foi substituido pela mediana dos preços, pois o produto tinha preço, apenas não foi vendido. No dataset das demanas os NAs foram substituidos por 0, indicando que não foi demanda daquele produto em sua respectiva semana.
+### Passo 04. Taxa de Conversão
 
-### Passo 05. Análise Exploratória dos Dados dos datasets pivotados (EDA)
+A taxa de conversão foi encontrada para os dados amostrados, onde essa taxa corresponde a taxa da população, seguindo o erro amostral definido nos parâmetros.
 
-Exploração dos Dados com objetivo de encontrar relações visuais entre os preços e as demandas dos produtos.
+### Passo 05. Teste de Hipóteses
 
-### Passo 06. Aplicação da Regressão Linear
+A metodologia do teste de hipóteses foi aplicado, seguindo a lógica ensinado e o resultado encontrado.
 
-O método de regressão linear foi utilizado com o intuito de identificar qual a elastiidade de preços desses produtos e se a reta encontrada apreenta significância estatística.
+### Passo 06. Resultados de Negócio
 
-### Passo 07. Bussiness Performance
+Apenas o resultado do teste não é o suficiente, é preciso traduzir isso em linguagem de negócio, ou seja, como isso gerou valor para a empresa. Dessa forma, uma análise monetária foi feito com a hipótese de que a conversão subiu 2% e outra com a real aplicação encontrada.
 
-Com os produtos encontrados foram aplicados alguns descontos, observando como a demanda reagiria.
+# 4. Definição dos Parâmetros
+A seguir daremos definições dos parâmetros e quais valores foram usados.
 
-### Passo 08. Elasticidade de Preços Cruzada
+## 4.1 Nível de Confiança
+É a probabilidade de que o intervalo de confiança contenha o verdadeiro parâmetro da população. Nesse teste um valor padrão de **95%** foi utilizado.
 
-Contudo, um produto nunca está sozinho na vitrine. Dessa forma, utilizou-se a elaticidade de preços cruzada para entender como a mudança no preço de cada produto iria impactar na demanda de todos os demais da categoria.
+## 4.2 Nível de Significância
+Pode ser definido como a probabilidade de rejeitar a hipótese nula quando ela é verdadeira, denotada por α (alfa), é o inverso do nível de confiência. Nesse projeto o valor foi de **5%**
 
-### Passo 09. Deploy do Modelo em Produção
+## 4.3 Tamanho do Efeito
+Seria a magnitude da diferença entre grupos ou a força de uma relação entre variáveis, indicando a importância prática dos resultados. O tamanho do efeito nos diz que quando o efeito é facilmente detectável, o tamanho da amostra é menor, enquanto, quando o efeito é mínimo, é preciso de uma amostra bem maior para prová-lo.
 
-Publicação do modelo em um ambiente de produção em nuvem (Streamlit) para que fosse possível o acesso de pessoas ou serviços para consulta dos resultados e com isso melhorar a decisão de negócio da empresa.
+Nesse teste a biblioteca do python statsmodels foi utilizada para definir esse parâmetro, e para isso foi usado o efeito esperado. Assim, o efeito que queremos provar é que a **conversão inicial é de 13% e a conversão da nova página é de 15%**, assim será definido nosso Effect Size através da função proportion_effectsize.
 
-# 4. Exploration Data Analysis
+## 4.4 Poder Estatístico
+É probabilidade de detectar um efeito, se ele realmente existir, denotado por 1 - β (beta), onde β é a taxa de falso negativo. Nesse projeto o valor padrão de **80%** foi utilizado.
 
-## 4.1 Análise de todos os E-commerces
+## 4.5 Tamanho da amostra
+Com todos esse parâmetros encontramos o tamanho da amostra, que é a quantidade de observações ou indivíduos incluídos em um estudo ou experimento, essencial para garantir a validade e precisão dos resultados estatísticos.
+O valor encontrado foi de **4.720** para cada grupo, e os valores que encontrarmos de conversão estarão representando toda a população, considerando um nível de confiância de 95%.
 
-### O E-commerce com mais vendas foi a Best Buy
+# 5. Teste de Hipóteses
 
-<div align="center">
-<img src="img/merchant.png" />
-</div>
+Através da amostra encontrada, foi calculado as conversões da página, ou seja, todo mundo que entrou na página e comprou sobre todos que apenas entraram na página (valores da amostra), os resultados foram:
 
-### Na Best Buy a categoria mais vendida é composta por Laptops e Computadores
+| **Grupo** | **Taxa de Conversão** |
+| ------------------- | ------------------- |
+| Controle (Página Antiga) | 11,55% |
+| Tratamento (Página Nova) | 12,9 |
 
-<div align="center">
-<img src="img/best_category.png" />
-</div>
+Esse resultado nos mostra uma melhor conversão na página nova, motivo pelo qual o teste foi criado, contudo, essa conversão é suficiente para provar que a página nova converte mais que a antiga?
 
-### A marca mais vendida na Best Buy foi a Sony, evidenciando a grande procura por marcas conhecidas na compra de dispositivos eletrônicos.
+Para isso faremos um teste de hipóteses, onde o intuito é rejeitar a hipótese nula, ou seja, que a conversão da página nova é diferente de 13% (seja ela maior ou menor).
 
-<div align="center">
-<img src="img/best_marcas.png" />
-</div>
-
-### Agosto foi o mês com mais vendas no E-commerce Best Buy, sendo o mês de férias escolares no Canadá e Estados Unidos.
-
-<div align="center">
-<img src="img/best_mes.png" />
-</div>
-
-## 4.2 Análise dos produtos na categoria escolhida.
-
-Com o intuito de aumentar a quantidade de informações para a realização da regressão linear foi escolhido o E-commerce e seua categoria com mais vendas, sendo a Best Buy na categoria de Laptops e Computadores.
-
-### Relação da mediana do preço de cada produto com a sua demanda.
-
-<div align="center">
-<img src="img/preco_demanda.png" />
-</div>
-
-# 5. Performance da Elasticidade por Produto
-
-Através da regressão linear da relação entre os preços de cada produtos com suas respectivas demandas na semana utilizamos a seguinte fórmula, onde a derivada é substituda pelo coeficiente angular a reta de regressão que melhor se ajusta a esses dados, e P0 e Q0 são as médias do Preço e Demanda respectivamente.
-
-<div align="center">
-<img src="img/formula.png" />
-</div>
-
-Dessa forma, entre os 39 produtos analisados apenas 7 apresentam significância estatística (P valor menor que 0,05), sendo:
-
-<div align="center">
-<img src="img/elasticidade.png" />
-</div>
-
-Observamos então que todos esses produtos apresentam elasticidade elástica negativa, ou seja, quando o preço do produto aumenta, a sua demanda tende a cair, onde o inverso também se torna real, aumentando a demanda na queda dos preços.
 
 # 6. Resultados de Negócio
 
