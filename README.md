@@ -84,8 +84,8 @@ Para realizar esse projeto as seguintes premissas de negócio foram adotadas:
 - É preciso garantir que o gruopo controle recebeu a página antiga e o grupo de tratamento recebeu a página nova.
 - Há uma quantidade grande na população dos dados, para o teste iremos tirar uma amostra de acordo com os parâmetros definidos.
 - As hipóteses serão:<br>
-**H0 - A conversão da nova página é de 13% (Hipótese Nula)**<br>
-**H1 - A conversão da nova página é diferente de 13%**
+  **H0 - A conversão da nova página é de 13% (Hipótese Nula)**<br>
+  **H1 - A conversão da nova página é diferente de 13%**
 
 # 3. Estratégia de Solução
 
@@ -118,23 +118,29 @@ A metodologia do teste de hipóteses foi aplicado, seguindo a lógica ensinado e
 Apenas o resultado do teste não é o suficiente, é preciso traduzir isso em linguagem de negócio, ou seja, como isso gerou valor para a empresa. Dessa forma, uma análise monetária foi feito com a hipótese de que a conversão subiu 2% e outra com a real aplicação encontrada.
 
 # 4. Definição dos Parâmetros
+
 A seguir daremos definições dos parâmetros e quais valores foram usados.
 
 ## 4.1 Nível de Confiança
+
 É a probabilidade de que o intervalo de confiança contenha o verdadeiro parâmetro da população. Nesse teste um valor padrão de **95%** foi utilizado.
 
 ## 4.2 Nível de Significância
+
 Pode ser definido como a probabilidade de rejeitar a hipótese nula quando ela é verdadeira, denotada por α (alfa), é o inverso do nível de confiência. Nesse projeto o valor foi de **5%**
 
 ## 4.3 Tamanho do Efeito
+
 Seria a magnitude da diferença entre grupos ou a força de uma relação entre variáveis, indicando a importância prática dos resultados. O tamanho do efeito nos diz que quando o efeito é facilmente detectável, o tamanho da amostra é menor, enquanto, quando o efeito é mínimo, é preciso de uma amostra bem maior para prová-lo.
 
 Nesse teste a biblioteca do python statsmodels foi utilizada para definir esse parâmetro, e para isso foi usado o efeito esperado. Assim, o efeito que queremos provar é que a **conversão inicial é de 13% e a conversão da nova página é de 15%**, assim será definido nosso Effect Size através da função proportion_effectsize.
 
 ## 4.4 Poder Estatístico
+
 É probabilidade de detectar um efeito, se ele realmente existir, denotado por 1 - β (beta), onde β é a taxa de falso negativo. Nesse projeto o valor padrão de **80%** foi utilizado.
 
 ## 4.5 Tamanho da amostra
+
 Com todos esse parâmetros encontramos o tamanho da amostra, que é a quantidade de observações ou indivíduos incluídos em um estudo ou experimento, essencial para garantir a validade e precisão dos resultados estatísticos.
 O valor encontrado foi de **4.720** para cada grupo, e os valores que encontrarmos de conversão estarão representando toda a população, considerando um nível de confiância de 95%.
 
@@ -142,81 +148,65 @@ O valor encontrado foi de **4.720** para cada grupo, e os valores que encontrarm
 
 Através da amostra encontrada, foi calculado as conversões da página, ou seja, todo mundo que entrou na página e comprou sobre todos que apenas entraram na página (valores da amostra), os resultados foram:
 
-| **Grupo** | **Taxa de Conversão** |
-| ------------------- | ------------------- |
-| Controle (Página Antiga) | 11,55% |
-| Tratamento (Página Nova) | 12,9 |
+| **Grupo**                | **Taxa de Conversão** |
+| ------------------------ | --------------------- |
+| Controle (Página Antiga) | 11,55%                |
+| Tratamento (Página Nova) | 12,9                  |
 
 Esse resultado nos mostra uma melhor conversão na página nova, motivo pelo qual o teste foi criado, contudo, essa conversão é suficiente para provar que a página nova converte mais que a antiga?
 
 Para isso faremos um teste de hipóteses, onde o intuito é rejeitar a hipótese nula, ou seja, que a conversão da página nova é diferente de 13% (seja ela maior ou menor).
 
+Assim, precisamos definir qual teste será usado, e para foi utilizado esse guia:
+
+<div align="center">
+<img src="img/Testes de Hipóteses.png" />
+</div>
+
+Como nosso problema se trata de números discretos em um formato e conversão, usaremos o método do Chi Sqare Test two sample. O resultado é um p-valor definirá o teste, onde se o p-valor for menor que o nível de significância, a hipótese nula é rejeitada, se for maior, significa que com esses dados não é possível rejeitar a hipótese nula. Assim o resultado do teste foi:
+
+**p-valor: 0.08** 
+
+Com esse resultado, **não podemos rejeitar a hipótese nula** e dizer que a conversão da segunda página é diferente de 13%.
 
 # 6. Resultados de Negócio
 
-Assim, podemos observar na imagem a seguir uma simulação do comportamento de cada um dis 7 produtos ao receberem um desconto de 5%.
+Respondendo as perguntas de negócio:
 
-<div align="center">
-<img src="img/business.png" />
-</div>
+## 6.1 A conversão da nova página é realmente melhor do a conversão da página atual?
+**Não**. A conversão da amostra da nova página foi melhor do que a página antiga, mas o teste de hipóteses nos mostrou que com esses dados não é possível rejeitar a hipótese nula e dizer que a conversão da página nova é 2% maior que o da página antiga.
 
-Os produtos _12 MacBook (Mid 2017, Silver)_ e _Details About Apple Macbook Air 13.3 Laptop_ apresentam ganhos significavos, certamente impactados pelo alto valor de suas elasticidade de preço.
+## 6.2 Qual o potencial de número de vendas que a nova página pode trazer?
+Imaginando o sucesso do teste de hipóteses e uma conversão de 15% na página nova. Podemos fazer o seguinte:
 
-Os demais produtos também aumentam suas demandas e geram lucro apesar do desconto aplicado.
+Primeiro, definindo quanto teria sido ganho com a página antiga no período, com a conversão de 13%. Após isso, aplicamos o mesmo cálculo, mas para uma conversão de 15% (esperado da nova página). Comparando os resultados teremos.
 
-# 7. Elasticidade de Preços Cruzada
+| **Métrica** | **Valor** |
+| ------------------------ | --------------------- |
+| Faturamento no período | USD 167.760.000 |
+| Novo faturamento no período | USD 193.563.000 |
+| Diferença no faturamento | USD 25.803.000 |
+| Variação (%) | 15.38% |
 
-Contudo, como a mudança do preço desse produto implica na demanda dos demais produtos da mesma categoria? A fórmula a seguir visa explicar isso, realizando uma correlação entre a mudança de preço de um produto (B) e a mudança na demanda de outro produto (A).
+Dessa forma, com o sucesso desse teste teríamos um ganho percentual de 15,38% no faturamento período.
 
-<div align="center">
-<img src="img/elasticidade_cruzada.png" />
-</div>
+## 6.3 Qual o faturamento total na venda do teclado bluetooth através da nova página?
+Para chegar nessa resposta, testes foram feitos com outros valores de conversão de nova página, alterando o tamanho do efeito e tamanho da amostra. Mas nenhum deles chegou no resultado que rejeita a hipótese nula. Dessa forma, não é possível definir esse faturamento, o que podemos definir foi que a nova página não obteve a conversão desejada.
 
-Através desses valores podemos simular como seria o comportamento da cateoria inteira caso um desconto fosse aplicado em um produto e quais produtos seriam complementares ou substitutos ao mesmo.
+# 7. Conclusão
 
-Na imagem a seguir segue um exemplo disso, onde a aplicação criada realiza o cálculo automático de como o faturamento da categoria mudaria com a mudança no preço de um produto específico.
+Nesse projeto, foram realizadas todas as etapas necessárias para a implementação de um projeto completo de Data Science focado na utilização do Teste A/B. Foi utilizado o método de gerenciamento de projeto chamado CRISP-DM/DS e obteve-se um desempenho satisfatório em compreender a utilização do teste A/B e aplicar em um problema real.
 
-<div align="center">
-<img src="img/elasticidade_cruzada_2.png" />
-</div>
+Tendo em vista os resultados, o projeto alcançou seu objetivo de fazer o teste e provar para a empresa de forma estatística que a conversão da nova página não foi a esperada.
 
-# 8. Modelo em Produção
-
-Com essas consideração uma aplicação foi criada, com as seguintes funcionalidades:
-
-- Calcular a elasticidade de produto escolhido;
-- Mostrar se essa elasticidade tem significância estatística;
-- Mostrar se a reta de regressão aplicada se ajusta bem aos dados;
-- Apresentar o faturamento anual da categoria e como ele se altera com a mudança no preço de um produto;
-- Apresentar os produtos que são correspondentes ou substitutos ao escolhido.
-
-A aplicação foi implementada e colocado em produção por meio da cloud Streamlit (https://streamlit.io), que tem como objetivo possibilitar a criação, execução e operação de aplicativos inteiramente localizados em nuvem.
-
-<div align="center">
-<img src="img/new_app.gif" />
-</div>
-<br>
-
-Para utilizar basta entrar no [link](https://elasticidade-de-preco.streamlit.app) e escolher o produto.
-
-O resultado do faturamento após o desconto é mostrado ao clicar no checkbox e variar o número da variação percentual a ser aplicada no produto.
-
-# 9. Conclusão
-
-Nesse projeto, foram realizadas todas as etapas necessárias para a implementação de um projeto completo de Data Science em um ambiente de produção. Foi utilizado o método de gerenciamento de projeto chamado CRISP-DM/DS e obteve-se um desempenho satisfatório em compreender a utilização da elasticidade de preço e criar um entregável que disponibilize essas informações de maneira rápida e fácil.
-
-Tendo em vista esses resultados, o projeto alcançou seu objetivo de encontrar uma solução simples e assertiva para apresentar os resultados da elasticidade de preço, disponibilizando um web app no Streamlit que retorna a elasticidade do produto, como a variação no seu preço impacta no faturamento anual da categoria e quais são os produtos substitutos e correspondentes de forma rápida e eficaz.
-
-# 10. Aprendizados e Trabalhos Futuros
+# 8. Aprendizados e Trabalhos Futuros
 
 **Aprendizados**
 
-- Compreensão e aplicação da elasticidade de preço e elasticidade de preços cruzada.
-- Conceitos de criação de uma aplicação no Streamlit que resolva o problema de negócio.
+- Compreensão e aplicação do Teste A/B com conversões.
+- Conceitos estatísticos e parâmetros com teste de hipóteses.
 
 **Trabalhos Futuros**
 
-- Realizar uma EDA mais aprodunda na categoria de Laptops e Computadores da Best Buy.
-- Através dessa EDA visar explicar quais são os melhores produtos e procurar indícios que expliquem sua elasticidade de preços.
-- Utilizar outras formas de calcular a elasticidade de preços.
-- Otimizar o web app de forma de fique mais funcional para seus usuários.
+- Testar outros parâmetros para chegar em um resultado.
+- Fazer uma EDA mais elaborada.
