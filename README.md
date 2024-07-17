@@ -6,7 +6,7 @@
 
 # Introdução
 
-Esse é um projeto end-to-end de Data Sciente, focado na especiação com Teste A/B. No qual identificamos qual página nos trouxe a maior conversão em vendas, e mostramos a importância de aplicar esse tipo de teste e como isso pode ser mostrado em valor monetário.
+Esse é um projeto end-to-end de Data Science, focado na especilização com Teste A/B. No qual identificamos qual página nos trouxe a maior conversão em vendas, e mostramos a importância de aplicar esse tipo de teste e como isso pode ser mostrado em valor monetário.
 
 O conjunto de dados pode ser encontrado através desse link: [Repositório do Kagle](https://www.kaggle.com/datasets/zhangluyuan/ab-testing?select=ab_data.csv)
 
