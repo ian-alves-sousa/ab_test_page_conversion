@@ -151,7 +151,7 @@ Através da amostra encontrada, foi calculado as conversões da página, ou seja
 | **Grupo**                | **Taxa de Conversão** |
 | ------------------------ | --------------------- |
 | Controle (Página Antiga) | 11,55%                |
-| Tratamento (Página Nova) | 12,9                  |
+| Tratamento (Página Nova) | 12,90%                |
 
 Esse resultado nos mostra uma melhor conversão na página nova, motivo pelo qual o teste foi criado, contudo, essa conversão é suficiente para provar que a página nova converte mais que a antiga?
 
@@ -165,7 +165,7 @@ Assim, precisamos definir qual teste será usado, e para foi utilizado esse guia
 
 Como nosso problema se trata de números discretos em um formato e conversão, usaremos o método do Chi Sqare Test two sample. O resultado é um p-valor definirá o teste, onde se o p-valor for menor que o nível de significância, a hipótese nula é rejeitada, se for maior, significa que com esses dados não é possível rejeitar a hipótese nula. Assim o resultado do teste foi:
 
-**p-valor: 0.08** 
+**p-valor: 0.08**
 
 Com esse resultado, **não podemos rejeitar a hipótese nula** e dizer que a conversão da segunda página é diferente de 13%.
 
@@ -174,23 +174,26 @@ Com esse resultado, **não podemos rejeitar a hipótese nula** e dizer que a con
 Respondendo as perguntas de negócio:
 
 ## 6.1 A conversão da nova página é realmente melhor do a conversão da página atual?
+
 **Não**. A conversão da amostra da nova página foi melhor do que a página antiga, mas o teste de hipóteses nos mostrou que com esses dados não é possível rejeitar a hipótese nula e dizer que a conversão da página nova é 2% maior que o da página antiga.
 
 ## 6.2 Qual o potencial de número de vendas que a nova página pode trazer?
+
 Imaginando o sucesso do teste de hipóteses e uma conversão de 15% na página nova. Podemos fazer o seguinte:
 
 Primeiro, definindo quanto teria sido ganho com a página antiga no período, com a conversão de 13%. Após isso, aplicamos o mesmo cálculo, mas para uma conversão de 15% (esperado da nova página). Comparando os resultados teremos.
 
-| **Métrica** | **Valor** |
-| ------------------------ | --------------------- |
-| Faturamento no período | USD 167.760.000 |
+| **Métrica**                 | **Valor**       |
+| --------------------------- | --------------- |
+| Faturamento no período      | USD 167.760.000 |
 | Novo faturamento no período | USD 193.563.000 |
-| Diferença no faturamento | USD 25.803.000 |
-| Variação (%) | 15.38% |
+| Diferença no faturamento    | USD 25.803.000  |
+| Variação (%)                | 15.38%          |
 
 Dessa forma, com o sucesso desse teste teríamos um ganho percentual de 15,38% no faturamento período.
 
 ## 6.3 Qual o faturamento total na venda do teclado bluetooth através da nova página?
+
 Para chegar nessa resposta, testes foram feitos com outros valores de conversão de nova página, alterando o tamanho do efeito e tamanho da amostra. Mas nenhum deles chegou no resultado que rejeita a hipótese nula. Dessa forma, não é possível definir esse faturamento, o que podemos definir foi que a nova página não obteve a conversão desejada.
 
 # 7. Conclusão
